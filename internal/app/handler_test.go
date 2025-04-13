@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/AlekseyAytov/skillrock-todo/internal/models/master"
-	"github.com/AlekseyAytov/skillrock-todo/store/mock"
+	"github.com/AlekseyAytov/skillrock-todo/internal/store/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

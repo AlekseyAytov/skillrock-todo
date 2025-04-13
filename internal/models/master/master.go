@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/AlekseyAytov/skillrock-todo/internal/models/task"
-	"github.com/AlekseyAytov/skillrock-todo/store"
+	"github.com/AlekseyAytov/skillrock-todo/internal/store"
 )
 
 // allowedStatuses содержит возможные значения Status

@@ -6,7 +6,7 @@ import (
 	"errors"
 
 	"github.com/AlekseyAytov/skillrock-todo/internal/models/task"
-	"github.com/AlekseyAytov/skillrock-todo/store"
+	"github.com/AlekseyAytov/skillrock-todo/internal/store"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 

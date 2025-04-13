@@ -2,7 +2,7 @@ package mock
 
 import (
 	"github.com/AlekseyAytov/skillrock-todo/internal/models/task"
-	"github.com/AlekseyAytov/skillrock-todo/store"
+	"github.com/AlekseyAytov/skillrock-todo/internal/store"
 )
 
 type MockStore struct {

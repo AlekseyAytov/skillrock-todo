@@ -6,7 +6,7 @@ import (
 
 	"github.com/AlekseyAytov/skillrock-todo/internal/app"
 	"github.com/AlekseyAytov/skillrock-todo/internal/models/master"
-	"github.com/AlekseyAytov/skillrock-todo/store/pg"
+	"github.com/AlekseyAytov/skillrock-todo/internal/store/pg"
 )
 
 var (
