@@ -9,7 +9,7 @@ import (
 )
 
 // allowedStatuses содержит возможные значения Status
-var allowedStatuses = []string{"new", "in_progres", "done"}
+var allowedStatuses = []string{"new", "in_progress", "done"}
 
 // TaskMaster отвечает за работу с объектами Task
 type TaskMaster struct {
@@ -24,7 +24,7 @@ func NewTaskMaster(st store.ToDoStore) *TaskMaster {
 }
 
 func (tm *TaskMaster) createTask(data task.TaskHeads) (*task.Task, error) {
-	if err := tm.verify(data); err != nil {
+	if err := tm.verifyTitle(data); err != nil {
 		return nil, err
 	}
 	// ID формируется автоматически в tm.store
@@ -43,12 +43,16 @@ func (tm *TaskMaster) createTask(data task.TaskHeads) (*task.Task, error) {
 // 	return fmt.Sprintf("%d", time.Now().UnixNano())
 // }
 
-func (tm *TaskMaster) verify(task task.TaskHeads) error {
-	if !slices.Contains(allowedStatuses, task.Status) { // need go 1.21+
-		return ErrBadStatus
-	}
+func (tm *TaskMaster) verifyTitle(task task.TaskHeads) error {
 	if task.Title == "" {
 		return ErrEmptyTitle
+	}
+	return nil
+}
+
+func (tm *TaskMaster) verifyStatus(task task.TaskHeads) error {
+	if !slices.Contains(allowedStatuses, task.Status) { // need go 1.21+
+		return ErrBadStatus
 	}
 	return nil
 }
@@ -92,7 +96,11 @@ func (tm *TaskMaster) UpdateBy(id string, newTask task.TaskHeads) error {
 	if err != nil {
 		return err
 	}
-	err = tm.verify(newTask)
+	err = tm.verifyStatus(newTask)
+	if err != nil {
+		return err
+	}
+	err = tm.verifyTitle(newTask)
 	if err != nil {
 		return err
 	}

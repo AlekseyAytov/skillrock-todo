@@ -4,12 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/AlekseyAytov/skillrock-todo/internal/models/task"
 	"github.com/AlekseyAytov/skillrock-todo/internal/store"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+// DBStorage represents data base
 type DBStorage struct {
 	db *sql.DB
 }
@@ -44,7 +46,9 @@ func (d *DBStorage) checkDB() error {
 }
 
 func (d *DBStorage) checkOrCreateTable() error {
-	_, err := d.db.ExecContext(context.TODO(),
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	_, err := d.db.ExecContext(ctx,
 		`CREATE TABLE IF NOT EXISTS public.tasks (
 			"id" SERIAL PRIMARY KEY,
 			"title" TEXT NOT NULL,
@@ -58,7 +62,9 @@ func (d *DBStorage) checkOrCreateTable() error {
 
 // Add task to database
 func (d *DBStorage) Add(t task.Task) error {
-	_, err := d.db.ExecContext(context.TODO(),
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	_, err := d.db.ExecContext(ctx,
 		`INSERT INTO public.tasks (
 			"title",
 			"description",
@@ -70,8 +76,11 @@ func (d *DBStorage) Add(t task.Task) error {
 	return err
 }
 
+// FindBy find task by ID
 func (d *DBStorage) FindBy(id string) (task.Task, error) {
-	row := d.db.QueryRowContext(context.TODO(),
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	row := d.db.QueryRowContext(ctx,
 		`SELECT
 			"id",
 			"title",
@@ -93,8 +102,11 @@ func (d *DBStorage) FindBy(id string) (task.Task, error) {
 	return t, nil
 }
 
+// GetAll tasks
 func (d *DBStorage) GetAll() ([]task.Task, error) {
-	rows, err := d.db.QueryContext(context.TODO(),
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	rows, err := d.db.QueryContext(ctx,
 		`SELECT
 			"id",
 			"title",
@@ -123,9 +135,12 @@ func (d *DBStorage) GetAll() ([]task.Task, error) {
 	return tasks, nil
 }
 
+// Update task
 func (d *DBStorage) Update(t task.Task) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
 	// запрос не обновляет поле created_at
-	_, err := d.db.ExecContext(context.TODO(),
+	_, err := d.db.ExecContext(ctx,
 		`UPDATE public.tasks SET
 			"title"       = $1,
 			"description" = $2,
@@ -136,8 +151,11 @@ func (d *DBStorage) Update(t task.Task) error {
 	return err
 }
 
+// Delete task
 func (d *DBStorage) Delete(t task.Task) error {
-	_, err := d.db.ExecContext(context.TODO(),
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	_, err := d.db.ExecContext(ctx,
 		`DELETE FROM public.tasks WHERE "id" = $1;`, t.ID)
 	return err
 }
